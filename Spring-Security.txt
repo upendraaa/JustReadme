@@ -1,0 +1,155 @@
+Walky talky
+
+Multithreading
+Stream
+Java8
+Spring security
+Oauth
+
+Timesten
+GG (Grid Gain)
+
+
+
+Spring Security and OAuth are two different concepts in the world of web application security.
+
+Spring Security:
+
+Spring Security is a powerful and highly customizable security framework for Java applications, particularly for web applications.
+It provides authentication and authorization mechanisms to secure the application and control access to resources.
+Spring Security offers a wide range of features such as user authentication, role-based access control, session management, password encryption, and more.
+It integrates well with the Spring ecosystem and can be easily configured using annotations or XML-based configuration.
+OAuth:
+
+OAuth, on the other hand, is an open standard protocol for authorization. It enables third-party applications to access user resources (e.g., data or services) on behalf of the user without sharing their credentials.
+OAuth is commonly used for authentication and authorization in modern web and mobile applications, especially when integrating with external services or APIs.
+It allows users to grant limited access to their resources to other applications without revealing their passwords.
+OAuth involves multiple parties: the resource owner (user), the client application (third-party application), and the authorization server (which issues access tokens).
+In summary, Spring Security focuses on securing the application itself by providing authentication and authorization mechanisms, while OAuth is a protocol that enables secure authorization and access delegation between different applications or services. They can be used together, with Spring Security handling the application's security and OAuth facilitating secure authorization and access to external resources.
+
+
+Authentication (Who are you)
+Httpbasic - plain text, username, password
+Httpdigest - it send hashed version of password
+X.509 - Standard service for PKI (Public key infrastructure) it ued trusted signed certificate
+LDAP  (Light weight directory access control)
+OpenID
+Jasig CAS
+JAAS
+Kerberos
+SAML
+
+SSO Protocols
+Oauth
+OpenID Connect, (used for web as well as mobile application)
+SAML  (Security assertion markup language) use for web application
+
+Authorization (What you can do)
+
+////////////////////
+
+OuthOpenId
+
+JWT   JSON Web token
+JWS   JSON Web Signature
+JWE   JSON Web Encryption
+JWK   JSON Web Key
+JWA   JSON Web Algorithm
+Web Finger   It use JRD (JSON Resource descripter) format
+
+JWT (JSON Web Token), JWS (JSON Web Signature), JWE (JSON Web Encryption), JWK (JSON Web Key), JWA (JSON Web Algorithms), and Web Finger are examples of web security standards and protocols.
+
+These standards are used for secure authentication, data integrity, and encryption in web applications and APIs. They are commonly used in modern web development for ensuring the security and privacy of user data.
+
+The web security standards and protocols such as JWT, JWS, JWE, JWK, JWA, and Web Finger are used in various use cases to ensure secure authentication, data integrity, and encryption in web applications and APIs. Here are some common use cases for each of these standards:
+
+1. JWT (JSON Web Token):
+   - User Authentication: JWTs are commonly used for securely transmitting authentication credentials between the client and server.
+   - Single Sign-On (SSO): JWTs can be used for implementing SSO across multiple applications and services.
+
+2. JWS (JSON Web Signature):
+   - Message Integrity: JWS allows for the creation and verification of digital signatures to ensure the integrity and authenticity of messages.
+
+3. JWE (JSON Web Encryption):
+   - Confidentiality: JWE provides a standard way to encrypt JSON data, ensuring that it remains confidential during transmission and storage.
+
+4. JWK (JSON Web Key):
+   - Key Management: JWK defines a standard JSON format for representing cryptographic keys, which can be used for secure key exchange and management.
+
+5. JWA (JSON Web Algorithms):
+   - Cryptographic Operations: JWA defines a set of standard cryptographic algorithms and operations that can be used with JWT, JWS, and JWE.
+
+6. Web Finger:
+   - Resource Discovery: Web Finger allows for the discovery of information about people, services, and other resources on the web using email addresses or other identifiers.
+
+These standards and protocols are widely used in modern web development for securing user data, ensuring the integrity of messages, and enabling secure communication between web applications and APIs. They provide a standardized and interoperable way to implement web security, making it easier for developers to build secure and reliable web applications.
+
+
+
+
+
+
+
+/// 
+RabbitMQ (Post office)
+Genereal purpose message broker, that provide end to end delivery
+To deal with stream of data, it take care of till message got delivered to consumer
+Producer
+Exchange (Routed queue info, message)
+Queue
+Consumer
+
+Apache Kafka (Library)
+Distributed event streaming platform to deal with continuous real time big data
+
+
+aws.amazon.com/compare/the-difference-between-rabbitmq-and-kafka/#:~:text=RabbitMQ%20and%20Apache%20Kafka%20move,exchange%20of%20continuous%20big%20data.
+
+
+Spring Security, OpenID, and OAuth are all related to web security, but they serve different purposes and have different functionalities.
+
+1. Spring Security:
+   - Spring Security is a powerful and highly customizable authentication and access control framework for Java applications. It provides comprehensive security services for Java EE-based enterprise software applications.
+   - It offers features such as authentication, authorization, protection against common security attacks, and integration with various authentication mechanisms and protocols.
+   - Spring Security is commonly used to secure web applications, REST APIs, and microservices.
+
+2. OpenID:
+   - OpenID is a decentralized authentication protocol that allows users to be authenticated by cooperating sites (known as relying parties) using a third-party service, eliminating the need for webmasters to provide their own ad hoc login systems.
+   - OpenID allows users to log in to multiple unrelated websites without having to register a separate username and password for each site. It is often used for single sign-on (SSO) across multiple websites.
+
+3. OAuth:
+   - OAuth is an open standard for access delegation, commonly used as a way for Internet users to grant websites or applications access to their information on other websites without sharing their credentials.
+   - It allows a user to grant a third-party application limited access to their resources, such as their profile information, without exposing their credentials. OAuth is commonly used for authorization and access control in web and mobile applications.
+
+In summary, Spring Security is a comprehensive security framework for Java applications, while OpenID and OAuth are protocols used for authentication and authorization in distributed systems, with OpenID focusing on decentralized authentication and OAuth focusing on access delegation and authorization. These technologies can be used together to provide a secure and seamless user experience in web applications.
+
+__________________
+The life cycle of a JSON Web Token (JWT) typically involves the following steps:
+
+1. User Authentication: The user logs in to the application by providing their credentials (e.g., username and password).
+
+2. Token Generation: Once the user is authenticated, the server generates a JWT containing the user's identity and any additional information (e.g., roles, permissions, etc.) that may be required for authorization and access control.
+
+3. Token Signing: The server signs the JWT using a secret key or public/private key pair to ensure its integrity and authenticity.
+
+4. Token Transmission: The server sends the JWT to the client (typically in the form of an HTTP response header or JSON payload).
+
+5. Token Storage: The client stores the JWT (usually in a cookie or local storage) and sends it back to the server with each subsequent request.
+
+6. Token Verification: The server verifies the JWT's signature and decodes its contents to retrieve the user's identity and any additional information.
+
+7. Authorization and Access Control: Based on the information contained in the JWT, the server determines whether the user is authorized to access the requested resource or perform the requested action.
+
+8. Token Expiration: The JWT may have an expiration time or date, after which it is no longer valid. The client and server must handle expired tokens appropriately (e.g., by requiring the user to log in again).
+
+Overall, the JWT life cycle involves generating, signing, transmitting, storing, verifying, and using the token for authorization and access control. It provides a secure and efficient way to authenticate and authorize users in web applications and APIs.
+_____________________
+
+The most commonly used type parameter names are:
+
+E - Element (used extensively by the Java Collections Framework)
+K - Key
+N - Number
+T - Type
+V - Value
+S,U,V etc. - 2nd, 3rd, 4th types

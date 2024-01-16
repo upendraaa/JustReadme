@@ -1,0 +1,92 @@
+typescriptlang.org
+To fix CORS issue in reactjs
+Add this to package.json
+"proxy": "http://api.example.com"
+
+
+https://www.youtube.com/watch?v=K6qafSgXV3I
+
+Install dependency
+(Only needed for development time)
+npm install typescript --save-dev
+
+(To check the typescript version)
+tsc -v
+
+Add tconfig.json in root directory
+To make the project as typescript project
+npx tsc --init
+
+
+npx tsc
+
+Strong, static typing
+Its superset of java script
+Created and maintained by microsoft
+
+To run
+npm install --force
+npm start
+
+
+________________
+Node version
+v16.16.0
+
+Type Script version
+Version 5.2.2
+
+Node typescript
+
+npm install -g typescript
+npm init -y
+npm install --save-dev typescript ts-node
+npx ts-node app.ts (To run the typescript code)
+node app.js (To run without normal js code)
+npx tsc (to compile the tsconfig file)
+It create a build folder as mentioned as out directory in tscofig file
+and inside the build folder it convert the ts code to js code.
+then run the code from build folder  (node build\app.js)
+
+
+
+// To disable the certificate verification, without this sdk initialization
+// is giving error
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+
+//To read the json request body
+app.use(express.json());
+
+//To disable cors issue for client
+app.use(cors());
+
+
+npm, npx, and Yarn are all package managers for JavaScript. Here's a breakdown of the differences between them:
+
+1. npm (Node Package Manager):
+   - npm is the default package manager for Node.js and is bundled with it.
+   - It allows you to install, manage, and publish packages globally or locally in your project.
+   - npm installs packages into a `node_modules` directory in your project.
+   - It provides various commands to manage packages, such as `install`, `uninstall`, `update`, etc.
+   - npm has a large and mature package ecosystem.
+
+2. npx (Node Package Runner):
+   - npx is a command-line tool that comes bundled with npm starting from version 5.2+.
+   - It allows you to run packages (executables) without globally installing them.
+   - With npx, you can run a package directly from the npm registry or execute a specific version of a package.
+   - npx helps to avoid conflicts between different versions of packages and reduces the need for global installations.
+
+3. Yarn:
+   - Yarn is an alternative package manager to npm, developed by Facebook.
+   - It aims to be faster, more reliable, and more secure than npm.
+   - Yarn uses a lockfile (`yarn.lock`) to ensure consistent and reproducible builds across different machines.
+   - It has features like parallel and cached installations, which can speed up the package installation process.
+   - Yarn has a similar command set to npm, allowing you to install, update, and manage packages.
+
+In summary, npm is the default package manager for Node.js, npx is a tool to run packages without installing them globally, and Yarn is an alternative package manager to npm with additional features like a lockfile and faster installation.
+
+
+
+
+
+
