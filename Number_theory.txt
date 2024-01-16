@@ -1,0 +1,16 @@
+1) Is every prime number> 2 is sum of two 
+prime number?
+2) Are there are infinitely many twin 
+prime numbers? (11,13)
+3) Are there infinitly many primes whose digits are all 1's, 
+(repunits)
+4) Perfect number (An integer is perfect if it is 
+sum of it's proper divisors) like 6 (1+2+3)
+5) d | n (d divide n) or n = dk
+6) 1 is neither prime not composite
+7) n >= 2 is composite if n = a*b  1<a<n and 1<b<n
+
+
+
+
+

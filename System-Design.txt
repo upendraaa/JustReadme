@@ -1,0 +1,27 @@
+NFR (Non functional requirement)
+Scalability
+Technical Constraints
+Important Numbers
+Use cases
+scoping
+
+
+Introduction
+Clariying question
+Digramming
+Minor Interruption
+
+
+Think loud and verbally walk through
+Rationale
+Trade offs
+Decision
+Taking quick pause
+
+->FrontEnd
+->Backend
+->Database
+->CDN
+->Streaming Servcie
+->Analytics
+->Security

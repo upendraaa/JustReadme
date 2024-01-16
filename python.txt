@@ -1,0 +1,33 @@
+python --version
+Python 3.10.5
+
+pip --version
+pip 22.0.4 from C:\Python310\lib\site-packages\pip (python 3.10)
+
+
+PS D:\statsig\appSamples\samples> & C:/Python310/python.exe d:/statsig/appSamples/samples/pythontodo/main.py
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='statsigapi.net', port=443): Max retries exceeded with url: /v1/download_config_specs (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)')))
+
+Microsoft Windows [Version 10.0.19044.3448]
+(c) Microsoft Corporation. All rights reserved.
+
+
+pip install statsig
+pip install flask
+pip install sqlalchemy
+pip install flask-cors
+
+
+from flask import Flask
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+
+def sum(a, b):
+    return (a + b)
+
+print(f'Sum of {a} and {b} is {sum(a, b)}')
+

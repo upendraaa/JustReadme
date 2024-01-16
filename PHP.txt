@@ -1,0 +1,54 @@
+PHP- (Personal home page tool) till PHP3.0
+PHP- (Hypertext preprocessor) After PHP 3.0
+
+MOCHA -> JavaScript-> ECMAScript
+
+PHP -> Interpreted Language
+JavaScript-> Interpreted Language
+
+$ composer create-project slim/slim-skeleton [my-app-name]
+$ cd [my-app-name]; php -S localhost:8080 -t public
+To run app.php file to localhost:8080
+ php -S localhost:8080 .\app.php
+
+
+To start PHP project
+download composer
+composer init
+composer require statsig/statsigsdk (To install dependency)
+composer install (To create compose.json file)
+composer update (To update dependency)
+
+Create main.php
+to run 
+php main.php
+
+
+To run your PHP file on port 8080, you can use PHP's built-in web server. Here are the steps:
+
+1. Open your terminal or command prompt and navigate to the directory that contains your PHP file.
+
+2. Run the following command to start the PHP web server on port 8080:
+
+   ```
+   php -S localhost:8080
+   ```
+
+   This command starts the PHP web server and listens on port 8080 for incoming requests.
+
+3. Open your web browser and go to the following URL:
+
+   ```
+   http://localhost:8080/your-file.php
+   ```
+
+   Replace "your-file.php" with the name of your PHP file.
+
+   This should open your PHP file in the web browser and run it on port 8080.
+
+Note: Keep in mind that PHP's built-in web server is not intended for production use, and you should use a proper web server like Apache or Nginx for hosting your PHP application in production.
+
+////
+Cron tab
+https://www.youtube.com/watch?v=ZsxQenUjt5U
+https://crontab.guru

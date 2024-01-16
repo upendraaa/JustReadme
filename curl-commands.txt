@@ -1,0 +1,49 @@
+ 
+  171  curl --help
+  172  curl http://google.com
+  173  curl -L http://google.com
+  174  curl -i http://google.com
+  175  curl https://reqres.in/api/users/2
+  176  curl -i https://reqres.in/api/users/2           //With all informantion and data
+  177  history
+  178  curl -l https://reqres.in/api/users/2    //Display only data without header info
+  179  curl -head https://reqres.in/api/users/2  
+  180  curl --head https://reqres.in/api/users/2
+  181  curl -I https://reqres.in/api/users/2
+  182  curl -v https://reqres.in/api/users/2
+  183  curl --trace curltrace.txt https://reqres.in/api/users/2
+  184  curl --trace-ascii asciicurltrace.txt https://reqres.in/api/users/2
+  185  curl -H "Accept:application/json" https://reqres.in/api/users/2
+  186  curl https://reqres.in/api/users -d "name=upen&job=engineer"
+  187  curl https://reqres.in/api/users --data "name=upen&job=engineer"
+  188  curl -X POST -H "Accept:application/json" https://reqres.in/api/users --data "{"name":"upen","job":"engineer"}
+
+curl -X POST -H "Accept:application/json" https://reqres.in/api/users --data "{"name":"upen","job":"engineer"}
+  189  curl -X POST -H "Accept:application/json" https://reqres.in/api/users --data "{"name":"upen","job":"engineer"}
+
+curl -X POST -H "Accept:application/json" https://reqres.in/api/users -d '{"name":"upen","job":"engineer"}'
+
+
+curl -X POST -H "Accept:application/json" https://reqres.in/api/users --data "{"name":"upen","job":"engineer"}
+  190  curl -X POST -H "Accept:application/json" https://reqres.in/api/users -d '{"name":"upen","job":"engineer"}'
+  191  curl -X POST -H "Accept:application/json" https://reqres.in/api/users -d '{"name":"upen","job":"engineer"}'
+  192  curl -i -X POST -H "Accept:application/json" https://reqres.in/api/users -d '{"name":"upen","job":"engineer"}'
+  193  curl -i -X PUT https://reqres.in/api/users/2 -d '{"name":"upen","job":"engineer"}'
+  194  curl -history
+  195  history
+  196  history > Downloads/curt.txt
+  
+    178  curl -s https://reqres.in/api/users/2    //Display only data without header info and progress
+	
+	  192  curl -i -X POST -H "Accept:application/json" https://reqres.in/api/users -d '{ "serialNumber": 10,"task": "task9","completed": false,"description": "","edited": false,"createdDate": "2023-10-06T10:41:11.806Z","modifiedDate": "2023-10-06T10:41:11.806Z","lastViewed": false}'
+	  
+	  curl -X POST -H "Accept:application/json" http://localhost:8080/todos --data "{"serialNumber": 10,"task": "task9","completed": false,"description": "","edited": false,"createdDate": "2023-10-06T10:41:11.806Z","modifiedDate": "2023-10-06T10:41:11.806Z","lastViewed": false}
+
+curl -s -X POST -H "Content-Type:" -d '{"serialNumber": 10,"task": "task9","completed": false,"description": "","edited": false,"createdDate": "2023-10-06T10:41:11.806Z","modifiedDate": "2023-10-06T10:41:11.806Z","lastViewed": false}' http://localhost:8080/todos
+
+curl -X POST -H "Content-Type: application/json" -d '{"serialNumber": 10,"task": "task9","completed": false,"description": "","edited": false,"createdDate": "2023-10-06T10:41:11.806Z","modifiedDate": "2023-10-06T10:41:11.806Z","lastViewed": false}' http://localhost:8080/todos
+
+
+curl -X DELETE http://your-api-endpoint/records/123
+
+

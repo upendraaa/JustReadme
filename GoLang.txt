@@ -1,0 +1,67 @@
+Google (C,C++,C#,JAVA)
+
+JavaScript, Python are interpreted language
+
+
+Go is compiled language
+Strongly typed language
+For cloud based services
+Docker use this
+
+Go Install:
+https://go.dev/doc/install
+
+go version
+
+Go Documenatation:
+https://go.dev/doc/tutorial/getting-started
+
+go get github.com/gorilla/mux
+
+To initilizing mod
+go mod init
+
+
+go run main.go
+go run . (If only one main file is there)
+go build .( To create compiled file, to distribute)
+./hello (Run the build file)
+
+
+go install github.com/gin-gonic/gin@latest
+
+go get -u gorm.io/gorm
+go get -u gorm.io/driver/sqlite
+
+
+
+require (
+  github.com/statsig-io/go-sdk v1.1.1
+)
+
+go get github.com/statsig-io/go-sdk@v1.1.1
+
+Dependecy to debug go file code:
+go get -u github.com/go-delve/delve/cmd/dlv
+
+
+
+myString := "Some String)  (:= initilaztion as scoped variable inside the function)
+
+
+abc
+acb
+bac
+cab
+bca
+cab
+
+w http.ResponseWriter
+
+w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+
+
+

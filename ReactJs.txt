@@ -1,0 +1,100 @@
+1) In reactjs if a page logged in one tab, how to disable login in other tab?
+
+In ReactJS, you can use the localStorage API to achieve this functionality.
+
+Here's an example of how you can disable login in other tabs when a user is already logged in:
+
+When the user logs in, store a flag in the localStorage to indicate that the user is logged in. For example, you can set a key called isLoggedIn with a value of true.
+// When user logs in
+localStorage.setItem('isLoggedIn', true);
+In your login component or any component responsible for checking the login status, listen for changes in the localStorage to determine if the user is already logged in.
+// Check if user is already logged in
+componentDidMount() {
+  window.addEventListener('storage', this.checkLoginStatus);
+}
+
+checkLoginStatus = () => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  if (isLoggedIn) {
+    // Redirect the user to a logged-in page or show a message
+    // indicating that they are already logged in.
+  }
+}
+
+componentWillUnmount() {
+  window.removeEventListener('storage', this.checkLoginStatus);
+}
+In other tabs or windows, listen for changes in the localStorage and perform actions accordingly.
+// Listen for changes in localStorage
+componentDidMount() {
+  window.addEventListener('storage', this.checkLoginStatus);
+}
+
+checkLoginStatus = () => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  if (isLoggedIn) {
+    // Disable login functionality or show a message indicating that
+    // login is disabled in this tab.
+  }
+}
+
+componentWillUnmount() {
+  window.removeEventListener('storage', this.checkLoginStatus);
+}
+By listening to changes in the localStorage and checking the isLoggedIn flag, you can disable the login functionality or show a message indicating that login is disabled in other tabs when a user is already logged in.
+
+________________________________
+
+2) Function hoisting:
+
+In the above example, the function sayHello() is called before it is declared. This works because the function declaration is hoisted to the top of its containing scope, so it is available for execution before its actual declaration in the code.
+
+It's important to note that only function declarations are hoisted, not function expressions. Function expressions are not moved to the top of the scope and need to be defined before they are called.
+
+Correct:
+sayHello(); // Output: "Hello"
+
+function sayHello() {
+  console.log("Hello");
+}
+
+
+Incorrect:
+sayHello(); // Error: sayHello is not a function
+
+var sayHello = function() {
+  console.log("Hello");
+};
+
+3) Closure function:
+
+Closures are often used to create private variables and encapsulate functionality. They allow us to create functions that "remember" certain values and maintain access to those values even when the outer function has completed its execution.
+
+function outerFunction() {
+  var outerVariable = 'Hello';
+
+  function innerFunction() {
+    console.log(outerVariable);
+  }
+
+  return innerFunction;
+}
+
+var closure = outerFunction();
+closure(); // Output: Hello
+
+5) Controlled and uncontrolled component
+Controlled Components: A controlled component is a form element (like an input or textarea) whose value is controlled by React state.
+
+Uncontrolled Components: An uncontrolled component is a form element whose value is handled by the DOM itself, rather than by React state.
+
+
+6) What is promise in reactjs
+In React, a Promise is an object that represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
+it has three state
+ Initialization
+ Fulfilled , move to then call
+ Rejected , handled by catch
+ 
+
+

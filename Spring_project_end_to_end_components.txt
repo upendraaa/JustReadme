@@ -1,0 +1,63 @@
+
+Springcore
+ Dependency Injection
+ Spring IOC
+ Spring AOP
+ Spring beans
+ beans Lifecycle
+ Spring Configuration
+Springboot
+ Spring boot starter
+ Spring boot configuration
+ Actuator
+RestAPi's
+Repostory and spring data
+ Spring JPA
+ Spring JDBC
+ Spring Data Mongodb
+Spring MVC Web application
+ Thymleaf
+ JSP
+ FreeMarker
+Database
+ RDBMS
+  MySql
+  Postgres
+ NoSQL
+  Mongodb
+  Cassandra
+Spring boot security
+ Authentication
+ Authorization
+ JWT
+Spring boot testing
+ JUnit
+ Mockito
+Spring Cloud
+  spring cloud Zuul proxy for API Gateway
+  Spring cloud config server Consul or Zookeeper
+  Spring Registery and discovery (Netflix Eureka, Consul, Zookeeper)
+  Circut breaker (Netflix Hystrix)
+  Spring cloud data stream (Kafka, Spark)
+  Spring cloud Security (Aouth2)
+  Distributed tracing(Seluth, Zipkin)
+Messaging Quese
+ Rabbit MQ
+ Kafka
+Devops
+ Docker
+ Kubernetes
+Clouds
+ AWS
+ Azure
+ GCP
+
+
+BPMN (Camunda)
+Business process model and notation
+orchestrates complex business processes that 
+span people, systems, and devices. With Camunda, 
+business users collaborate with developers to model
+and automate end-to-end processes using BPMN-powered
+flowcharts, alongside DMN decision tables that promote speed, 
+scale, and decision logic.

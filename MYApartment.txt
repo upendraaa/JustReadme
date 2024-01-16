@@ -1,0 +1,12 @@
+Brigade						Prestige			
+			1201	742				1135	758
+Master	10*12					Master	11*14		
+Dining	6.5*7.7					Dining	13*12		
+Living	11*11.1					Living	11*9.8		
+Master Toilet	5.1*8.2					M Toilet	5.2*9.2		
+Balcony	2.9*11.0					Balcony	5*9.8		
+Kitchen	9.7*7.3					Kitchen	10*8		
+Second	10*11.7					Second	11*11		
+Toilet	6.6*4.11					Toilet	5.2*8.2		
+Study	6.1*11.7					Utility	8*4.4		
+Foyer	4.7*7*7								
