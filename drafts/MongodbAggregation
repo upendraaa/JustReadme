@@ -1,0 +1,48 @@
+ private void spikeMethod() {
+    Aggregation aggregation =
+        newAggregation(
+            match(Criteria.where("type").in("Article", "Media Content")),
+            match(Criteria.where("mediaType").in("video", "image")),
+            match(Criteria.where("langCode").is("en")),
+            match(
+                Criteria.where("icd10codeNames")
+                    .in(Arrays.asList("A50.5", "H77.25", "H77.2", "A50", "H77"))),
+            addFields()
+                .addField("custom_icd10codeNames_sort_field")
+                .withValue(
+                    ConditionalOperators.switchCases(
+                        ConditionalOperators.Switch.CaseOperator.when(
+                                AggregationExpression.from(
+                                    MongoExpression.create(
+                                        "$expr", "{$in: ['$icd10codeNames', 'A50.5']}")))
+                            .then(1),
+                        ConditionalOperators.Switch.CaseOperator.when(
+                                AggregationExpression.from(
+                                    MongoExpression.create(
+                                        "$expr", "{$in: ['$icd10codeNames', 'H77.25']}")))
+                            .then(2),
+                        ConditionalOperators.Switch.CaseOperator.when(
+                                AggregationExpression.from(
+                                    MongoExpression.create(
+                                        "$expr", "{$in: ['$icd10codeNames', 'H77.2']}")))
+                            .then(3),
+                        ConditionalOperators.Switch.CaseOperator.when(
+                                AggregationExpression.from(
+                                    MongoExpression.create(
+                                        "$expr", "{$in: ['$icd10codeNames', 'A50']}")))
+                            .then(4),
+                        ConditionalOperators.Switch.CaseOperator.when(
+                                AggregationExpression.from(
+                                    MongoExpression.create(
+                                        "$expr", "{$in: ['$icd10codeNames', 'H77']}")))
+                            .then(5)))
+                .build(),
+            sort(Sort.Direction.ASC, "custom_icd10codeNames_sort_field"),
+            sort(Sort.Direction.DESC, "changed"));
+    try {
+      List<Content> contents =
+          mongoTemplate.aggregate(aggregation, "content_item", Content.class).getMappedResults();
+    } catch (Exception ex) {
+      log.error("{}", ex);
+    }
+  }

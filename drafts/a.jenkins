@@ -1,0 +1,311 @@
+pipeline {
+ agent {
+ docker {
+ label 'jenkins-ec2-cloud'
+ // Image most likely will be the base-builder
+ image 'base-builder:1.0'
+ args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+ }
+ }
+
+ options {
+ timestamps()
+ }
+
+ environment {
+ // Change the following variables
+ APP_NAME = 'content-sync'
+ APP_NAME_SHORT = 'cs'
+ // Where to run gradle after docker-compose
+ BUILD_CONTAINER = 'cs'
+ // For running gradle build
+ BUILD_EXCLUSIONS = '-x test -x spotlessCheck'
+ // Docker repository
+ ARTIFACTORY_REGISTRY_URL = "outcomehealth-oh-docker-local.jfrog.io"
+ // Docker compose file to run
+ DOCKER_COMPOSE_FILE = "docker/docker-compose-build.yml"
+ // Where to broadcast build result
+ SLACK_CHANNEL = '#content-services-build-notifications'
+ // Build outputs
+ JAR_PATH = 'build/libs'
+ //Jenkins build role for aws
+ ASSUME_ROLE_NAME = 'jenkins_deployment'
+ AWS_REGION = "us-east-1"
+
+ // These variables are mandatory to stay exactly how they are, or else
+ // it won't be able to identify the moment to build or promote an image
+ GIT_COMMIT_SHORT = sh (
+ script: 'git rev-parse --short=8 ${GIT_COMMIT}',
+ returnStdout: true
+ ).trim()
+ }
+
+ stages {
+ // Sets variables defined by the branch name
+ stage ('Get/Set Environment') {
+ steps {
+ script {
+ env.DEPLOY = "1"
+
+ def envMap = [:]
+ // production only tagged commits, not ending in -rc
+ if (env.TAG_NAME && env.TAG_NAME ==~ /^\d+\.\d+\.\d+$/) {
+ envMap = [ohEnv : 'production',
+ awsAccount : '816548431951']
+ }
+ // staging has tagged commits with -rc in the end
+ else if ((env.TAG_NAME && env.TAG_NAME ==~ /^\d+\.\d+\.\d+-rc.*$/) ||
+ env.BRANCH_NAME ==~ /^(release|hotfix)-.*/) {
+ envMap = [ohEnv : 'staging',
+ awsAccount : '543904618537']
+ }
+ // master goes to platform
+ else if (env.BRANCH_NAME == 'master') {
+ envMap = [ohEnv : 'development',
+ awsAccount : '955831509488']
+ }
+ // other branches can compile and test, but no image will be created
+ else {
+ envMap = [ohEnv: 'test',
+ awsAccount: '955831509488']
+ env.DEPLOY = "0"
+ }
+
+ // Untagged pushes to staging/hotfixes won't deploy
+ if (env.BRANCH_NAME ==~ /^(release|hotfix)-.*/) {
+ env.DEPLOY = "0"
+ }
+
+ env.ohEnv = envMap.ohEnv
+ env.AWS_ACCOUNT = envMap.awsAccount
+// env.BUILD_AGENT = envMap.buildAgent //Is this needed?
+// env.sshAgentCredentials = envMap.sshAgentCredentials //Is this needed?
+ }
+ }
+ }
+
+ stage ('Java Docker Container') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ steps {
+ // Always log into main account ECR repo
+ script {
+ sh 'docker-compose -f docker/docker-compose-build.yml up -d --remove-orphans'
+ }
+ }
+ }
+
+ stage ('Spotless Check') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ steps {
+ script {
+ withCredentials([usernamePassword(
+ credentialsId: 'devops-artifactory-publisher',
+ usernameVariable: 'ARTIFACTORY_USERNAME',
+ passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+ sh "docker-compose -f ${DOCKER_COMPOSE_FILE} exec -T \
+ -e ARTIFACTORY_USER=$ARTIFACTORY_USERNAME -e ARTIFACTORY_PASS=$ARTIFACTORY_PASSWORD \
+ ${BUILD_CONTAINER} \
+ ./gradlew spotlessCheck"
+ }
+ }
+ }
+ }
+
+ // Only if needs to build
+ stage ('Build') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ steps {
+ script {
+ withCredentials([usernamePassword(credentialsId: 'devops-artifactory-publisher',
+ usernameVariable: 'ARTIFACTORY_USERNAME',
+ passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+ sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec -T \
+ -e ARTIFACTORY_USER=$ARTIFACTORY_USERNAME -e ARTIFACTORY_PASS=$ARTIFACTORY_PASSWORD \
+ ${BUILD_CONTAINER} \
+ ./gradlew clean build ${BUILD_EXCLUSIONS}'
+ }
+ }
+ }
+ }
+
+ stage ('Test') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ steps {
+ script {
+ sh "docker-compose -f ${DOCKER_COMPOSE_FILE} exec -T \
+ ${BUILD_CONTAINER} ./gradlew test -x spotlessCheck"
+ junit '**/build/test-results/**/*.xml'
+ }
+ }
+ }
+
+ stage("SonarQube analysis") {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ steps {
+ script {
+ withCredentials([string(credentialsId: 'sonar-token',
+ variable: 'SONAR_TOKEN')]) {
+ sh "docker-compose -f ${DOCKER_COMPOSE_FILE} exec -e SONAR_TOKEN=$SONAR_TOKEN -T \
+ ${BUILD_CONTAINER} ./gradlew sonar"
+ }
+ }
+ }
+ }
+
+ // Builds the image
+ stage ('Build Docker image') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'production'
+ }
+ }
+ environment {
+ // This goes into the image labels, so we can check more info on it
+ BUILD_DATE = sh (script: "date -u +'%Y-%m-%dT%H:%M:%SZ'", returnStdout: true).trim()
+ IMAGE_TO = "${ARTIFACTORY_REGISTRY_URL}/${APP_NAME_SHORT}:${GIT_COMMIT_SHORT}" //TODO: You need to update this to match your naming contention of the folders
+ }
+ steps {
+ script {
+ image = docker.build("${IMAGE_TO}",
+ "--build-arg BUILD_DATE=${BUILD_DATE} \
+ --build-arg VCS_REF=${GIT_COMMIT} \
+ --build-arg JAR_FILE=${JAR_PATH}/* \
+ .")
+ }
+ }
+ }
+
+ // Production env doesn't build, it gets the existing image from the repository
+ stage ('Pull Docker Image(Only Prod)') {
+ when {
+ environment name: 'ohEnv', value: 'production'
+ }
+ environment {
+ IMAGE_FROM = "${ARTIFACTORY_REGISTRY_URL}/${APP_NAME_SHORT}:${GIT_COMMIT_SHORT}" //TODO: You need to update this to match your naming contention of the folders
+ }
+ steps {
+ script {
+ image = docker.image "${IMAGE_FROM}"
+ image.pull()
+ }
+ }
+ }
+
+ // Tags and pushes images
+ stage ('Tag and Push Image') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'test'
+ }
+ }
+ steps {
+ script {
+ // Used for the deploy stage, starts with the commit hash but can be a tag name later
+ env.IMAGE_TAG = "${GIT_COMMIT_SHORT}"
+
+ // Pushes additional tags if in production/staging and set the image tag to be deployed
+ if ("${ohEnv}" == 'production') {
+ image.push('latest')
+ image.push("${TAG_NAME}")
+ env.IMAGE_TAG = "${TAG_NAME}"
+ }
+ else if ("${ohEnv}" == 'staging') {
+ image.push('staging')
+ image.push("${GIT_COMMIT_SHORT}")
+ image.push("${GIT_BRANCH}")
+ // We may not have a tag
+ if (env.TAG_NAME) {
+ image.push("${TAG_NAME}")
+ env.IMAGE_TAG = "${TAG_NAME}"
+ }
+ }
+ else {
+ // This should be platform only
+ image.push("${GIT_COMMIT_SHORT}")
+ }
+ }
+ }
+ }
+
+ stage('Xray Scan') {
+ when {
+ not {
+ environment name: 'ohEnv', value: 'test'
+ }
+ }
+ environment {
+ IMAGE_XRAY = "${ARTIFACTORY_REGISTRY_URL}/${APP_NAME_SHORT}:${GIT_COMMIT_SHORT}"
+ }
+ steps{
+ script{
+ withCredentials([usernamePassword(credentialsId: 'devops-artifactory-publisher',
+ usernameVariable: 'ARTIFACTORY_USERNAME',
+ passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+ sh """#!/bin/bash
+ set -x
+ pip install requests
+ xray_scan -a `docker inspect --format='{{index .RepoDigests 0}}' ${IMAGE_XRAY} | cut -d':' -f2` --no-error
+ """
+ }
+ }
+ }
+ }
+
+ // Actually deploys the pushed image
+ // As it is only one container, updates only its tag
+ stage ('Deploy') {
+ when {
+ environment name: 'DEPLOY', value: '1'
+ }
+ steps {
+ script {
+ withAWS(role: env.ASSUME_ROLE_NAME, roleAccount: env.AWS_ACCOUNT) {
+ sh "ecs cron ${ohEnv}-${APP_NAME} ${ohEnv}-${APP_NAME} ${ohEnv}-${APP_NAME}-scheduled-task \
+ --region ${AWS_REGION} \
+ --tag ${IMAGE_TAG} \
+ --no-deregister"
+ sh "ecs cron ${ohEnv}-${APP_NAME} ${ohEnv}-${APP_NAME}-taxonomy ${ohEnv}-${APP_NAME}-taxonomy-scheduled-task \
+ --region ${AWS_REGION} \
+ --tag ${IMAGE_TAG} \
+ --no-deregister"
+ }
+ }
+ }
+ }
+ }
+ post {
+ success {
+ script {
+ slackSend channel: "${SLACK_CHANNEL}", color: "good", message: "[${env.JOB_NAME}] Build ${env.BUILD_NUMBER} *Succeeded* - ${env.BUILD_URL}"
+ if ((env.TAG_NAME && env.TAG_NAME ==~ /^\d+\.\d+\.\d+-rc.*$/)) {
+ build job: 'QA/Content Services QA/Staging/Content API Tests/main', propagate: false, wait: false
+ }
+ }
+ }
+ failure {
+ script {
+ slackSend channel: "${SLACK_CHANNEL}", color: "danger", message: "[${env.JOB_NAME}] Build ${env.BUILD_NUMBER} *Failed* - ${env.BUILD_URL}"
+ }
+ }
+ }
+}

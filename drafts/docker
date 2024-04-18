@@ -1,0 +1,29 @@
+FROM outcomehealth-oh-docker-local.jfrog.io/java:17
+
+ARG JAR_FILE
+ARG VCS_REF
+ARG BUILD_DATE
+
+LABEL maintainer="DevOps <devops@outcomehealth.com>"
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.name="Content Sync"
+LABEL org.label-schema.description="Content Synchronization"
+LABEL org.label-schema.vcs-ref=$VCS_REF
+
+ENV APP_PATH=/app
+WORKDIR ${APP_PATH}
+
+USER root
+
+COPY --chown=app-user:app-group docker-entrypoint.sh ${APP_PATH}
+COPY --chown=app-user:app-group build/libs/contentsync-1.0.0.jar ${APP_PATH}/app.jar
+RUN chown app-user:app-group ${APP_PATH} /newrelic
+RUN mkdir /app/log && chown app-user:app-group /app /app/log /newrelic
+
+# Back to app user
+USER app-user
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+
+CMD ["web"]
